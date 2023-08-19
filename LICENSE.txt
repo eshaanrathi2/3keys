@@ -1,0 +1,14 @@
+/**
+ * Copyright Eshaan Rathi - All Rights Reserved
+ * 
+ * The source code under this repository, hereby referred to as "the source code"
+ * is protected under international copyright law.  All rights
+ * reserved and protected by the copyright holder.
+ * The source code is confidential and only available to authorized individuals with the
+ * permission of the copyright holders. If you encounter the source code and do not have
+ * permission, please contact the copyright holders and delete the source code.
+ * Distribution of the source code, redistribution of the source code,
+ * modification the source code and using the
+ * source code for commercial and non commercial purposes is strictly prohibited.
+ * Written by Eshaan Rathi <eshaanrathi2@gmail.com> 2023.
+ */
