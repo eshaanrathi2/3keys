@@ -60,6 +60,23 @@ class SignInButton extends StatelessWidget {
   }
 }
 
+class SquareGoogleButton extends StatelessWidget {
+  final String imagePath;
+  const SquareGoogleButton({super.key, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Image.asset(imagePath, height: 40,),
+    );
+  }
+}
+
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -85,6 +102,8 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
+            // Align to center 
+            // mainAxisAlignment: MainAxisAlignment.center,
             
             children: [
               // vertical spacing of 50
@@ -165,21 +184,92 @@ class LoginPage extends StatelessWidget {
               const Text(
                 "Forgot your Cipher?",
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                  //fontWeight: FontWeight.bold,
                 ),
               ),
 
 
-              // vertical spacing of 70
-              const SizedBox(height: 70),
-
+              // enter button
+              // vertical spacing of 20
+              const SizedBox(height: 20),
               SignInButton(onTap: signUserIn),
 
 
-          
-              // enter
+              // Google , Apple sign choice
+              // vertical spacing of 30
+              const SizedBox(height: 30),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: .5,
+                        color: Colors.grey,
+                      ),
+                    ),
+              
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        'or continue with',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+              
+                    Expanded(
+                      child: Divider(
+                        thickness: .5,
+                        color: Colors.grey,
+                      ),
+                    )
+                ],),
+              ),
+
+              //Google + Apple sign in buttons
+              // vertical spacing of 30
+              const SizedBox(height: 30),
+
+
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SquareGoogleButton(imagePath: "lib/images/google-logo.png"),
+                  SizedBox(width: 20,),
+
+                  SquareGoogleButton(imagePath: "lib/images/apple-logo4 copy.png"),
+              ],),
+
+
+
+              // Register
+              // vertical spacing of 30
+              const SizedBox(height: 30),
+
+              // secret cipher
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("First time?"),
+                  SizedBox(width: 4,),
+                  Text(
+                    "Create your travelers log!",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 0, 102, 185),
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
+
+              
+
           ],),
         ),
       ),
