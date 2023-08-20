@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_3_keys/pages/login_page.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -16,3 +19,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
