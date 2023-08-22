@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CredentialsField extends StatelessWidget {
@@ -81,11 +82,24 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   //credentials controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   //sign user in method
-  void signUserIn(){}
+  void signUserIn() async {
+    try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
   
   
 
@@ -150,7 +164,7 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 10),
       
                 CredentialsField(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'ferdinandmagellan@gmail.com',
                   obscureText: false,
                 ),
