@@ -78,30 +78,62 @@ class SquareGoogleButton extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   //credentials controllers
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   //sign user in method
   void signUserIn() async {
+
+    // show loading circle
+    showDialog(
+      context:context,
+      builder: (context){
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
     try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-    } on FirebaseAuthException catch (e) {
+    } 
+    on FirebaseAuthException catch (e) {
+      // User not found
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        displayUserNotFound();
+        print('User not found');
+      } 
+
+      // Wrong password
+      else if (e.code == 'wrong-password') {
+        // displayWrongPassword();
+        print('Cipher incorrect!');
       }
     }
   }
   
-  
+  void displayUserNotFound() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('No traveller found with that email.\nEnter correct email or sign up :)'),
+        );
+      },
+    );
+  }
+    
 
   @override
   Widget build(BuildContext context) {
