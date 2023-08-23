@@ -104,11 +104,17 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      // Pop the CircularProgressIndicator and display the error
+      Navigator.pop(context);
     } 
     on FirebaseAuthException catch (e) {
+      // Pop the CircularProgressIndicator and display the error
+      Navigator.pop(context);
+
+      
       // User not found
       if (e.code == 'user-not-found') {
         displayUserNotFound();
@@ -117,18 +123,47 @@ class _LoginPageState extends State<LoginPage> {
 
       // Wrong password
       else if (e.code == 'wrong-password') {
-        // displayWrongPassword();
+        displayWrongPassword();
+        print('Cipher incorrect!');
+      }
+
+      else{
+        displayIncorrectCredentials();
         print('Cipher incorrect!');
       }
     }
+
   }
   
   void displayUserNotFound() {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return const AlertDialog(
           title: Text('No traveller found with that email.\nEnter correct email or sign up :)'),
+        );
+      },
+    );
+  }
+
+  void displayWrongPassword() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Cipher was not entered correctly. Try again :('),
+        );
+      },
+    );
+  }
+
+
+  void displayIncorrectCredentials() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect credentials. Try again :('),
         );
       },
     );
