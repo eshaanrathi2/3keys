@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text("Home Page of 3 Keys.\nLogged in as" + user.email!),
+        child: Text("Home Page of 3 Keys.\nLogged in as " + user.email!),
       ),
     );
   }
