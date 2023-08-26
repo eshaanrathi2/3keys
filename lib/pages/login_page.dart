@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       // Pop the CircularProgressIndicator and display the error
       Navigator.pop(context);
 
-      
+
       // User not found
       if (e.code == 'user-not-found') {
         displayUserNotFound();
@@ -322,10 +322,10 @@ class _LoginPageState extends State<LoginPage> {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareGoogleButton(imagePath: "lib/images/google-logo.png"),
+                    SquareGoogleButton(imagePath: "lib/assets/auth_page/apple-logo.png"),
                     SizedBox(width: 20,),
       
-                    SquareGoogleButton(imagePath: "lib/images/apple-logo4 copy.png"),
+                    SquareGoogleButton(imagePath: "lib/assets/auth_page/google-logo.png"),
                 ],),
       
       
