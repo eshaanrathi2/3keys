@@ -67,6 +67,10 @@ flutter:
     - lib/assets/
     - lib/assets/auth_page/
     - lib/assets/locations/santa-clara/
+    - lib/assets/locations/cairo/
+    - lib/assets/locations/bali/
+    - lib/assets/locations/paris/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

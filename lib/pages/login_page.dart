@@ -118,18 +118,18 @@ class _LoginPageState extends State<LoginPage> {
       // User not found
       if (e.code == 'user-not-found') {
         displayUserNotFound();
-        print('User not found');
+        // print('User not found');
       } 
 
       // Wrong password
       else if (e.code == 'wrong-password') {
         displayWrongPassword();
-        print('Cipher incorrect!');
+        // print('Cipher incorrect!');
       }
 
       else{
         displayIncorrectCredentials();
-        print('Cipher incorrect!');
+        // print('Cipher incorrect!');
       }
     }
 
