@@ -7,10 +7,13 @@ class AtlasPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Atlas Page"),
-      ),
-      body: Center(
-        child: Text("This is Atlas Page"),
+        title: const Text(
+          "Atlas", 
+          style: TextStyle(
+            color: Colors.black
+          )
+        ),
+        backgroundColor: Colors.white,
       ),
     );
   }
