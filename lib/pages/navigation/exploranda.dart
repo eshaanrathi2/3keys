@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_3_keys/data_models/location_display.dart';
+import 'package:project_3_keys/data_models/game_location_display.dart';
 
-import '../../data_models/loctions.dart';
+import '../../data_models/game_loctions.dart';
 
 
 class LocationItem extends StatelessWidget {

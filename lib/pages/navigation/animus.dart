@@ -16,6 +16,9 @@ class AnimusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.grey, //change your color here
+        ),
         actions: [
           IconButton(
             onPressed: signUserOut,
