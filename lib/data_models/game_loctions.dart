@@ -8,7 +8,14 @@ class Location {
   final int keysFound;
   final int totalKeys;
 
-  Location({required this.name, required this.id , required this.imageUrl, required this.numOfPlayers, required this.keysFound, required this.totalKeys});
+  Location({
+    required this.name, 
+    required this.id , 
+    required this.imageUrl, 
+    required this.numOfPlayers, 
+    required this.keysFound, 
+    required this.totalKeys,
+  });
 }
 
 List<Location> locations = [
