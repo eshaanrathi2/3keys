@@ -48,72 +48,105 @@ class _AnimusPageState extends State<AnimusPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.grey, //change your color here
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.grey, //change your color here
+            ),
+            actions: [
+              IconButton(
+                onPressed: signUserOut,
+                icon: const Icon(Icons.logout))
+            ],
+            title: const Text(
+              "Animus", 
+              style: TextStyle(
+                color: Colors.black
+              )
+            ),
+            backgroundColor: Colors.white,
           ),
-          actions: [
-            IconButton(
-              onPressed: signUserOut,
-              icon: const Icon(Icons.logout))
-          ],
-          title: const Text(
-            "Animus", 
-            style: TextStyle(
-              color: Colors.black
-            )
-          ),
-          backgroundColor: Colors.white,
-        ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              // Profile Image
-              _profileImage != null
-                  ? Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        CircleAvatar(
-                          radius: 60.0,
-                          backgroundImage: FileImage(_profileImage!),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                // Profile Image
+                _profileImage != null
+                    ? Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          CircleAvatar(
+                            radius: 60.0,
+                            backgroundImage: FileImage(_profileImage!),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () => _removeImage(true),
+                          ),
+                        ],
+                      )
+                    : CircleAvatar(
+                        radius: 60.0,
+                        child: IconButton(
+                          icon: Icon(Icons.add_a_photo),
+                          onPressed: () => _pickImage(ImageSource.gallery),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () => _removeImage(true),
-                        ),
-                      ],
-                    )
-                  : CircleAvatar(
-                      radius: 60.0,
-                      child: IconButton(
-                        icon: Icon(Icons.add_a_photo),
-                        onPressed: () => _pickImage(ImageSource.gallery),
+                      ),
+                SizedBox(height: 20.0),
+                // Background Image
+                // _backgroundImage != null
+                //     ? Stack(
+                //         alignment: Alignment.bottomRight,
+                //         children: [
+                //           Image.file(_backgroundImage!),
+                //           IconButton(
+                //             icon: Icon(Icons.close),
+                //             onPressed: () => _removeImage(false),
+                //           ),
+                //         ],
+                //       )
+                //     : ElevatedButton(
+                //         onPressed: () => _pickImage(ImageSource.gallery),
+                //         child: Text('Upload Background Image'),
+                //       ),
+                SizedBox(height: 20.0),
+                // Other user information widgets can go here
+                
+                const TabBar(
+                  tabs: [
+                    Tab(
+                      // text: 'Chronicles',
+                      // Change the text color of this tab to black
+                      // You can customize other styles here as well
+                      iconMargin: EdgeInsets.all(0),
+                      child: Text(
+                        'Chronicles',
+                        style: TextStyle(color: Colors.black,fontSize: 18),
                       ),
                     ),
-              SizedBox(height: 20.0),
-              // Background Image
-              // _backgroundImage != null
-              //     ? Stack(
-              //         alignment: Alignment.bottomRight,
-              //         children: [
-              //           Image.file(_backgroundImage!),
-              //           IconButton(
-              //             icon: Icon(Icons.close),
-              //             onPressed: () => _removeImage(false),
-              //           ),
-              //         ],
-              //       )
-              //     : ElevatedButton(
-              //         onPressed: () => _pickImage(ImageSource.gallery),
-              //         child: Text('Upload Background Image'),
-              //       ),
-              SizedBox(height: 20.0),
-              // Other user information widgets can go here
-            ],
+
+                    Tab(
+                      // text: 'Tab 2',
+                      // Change the text color of this tab to black
+                      // You can customize other styles here as well
+                      iconMargin: EdgeInsets.all(0),
+                      child: Text(
+                        'Ledger',
+                        style: TextStyle(color: Colors.black,fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+
+                
+
+
+              ],
+            ),
           ),
         ),
       ),
