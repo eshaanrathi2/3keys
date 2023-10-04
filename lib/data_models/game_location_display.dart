@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'game_loctions.dart';
 
-import '../game_locations/santa-clara/game.dart';
+import '../features/games/santa-clara/game.dart';
 
 class LocationDisplayPage extends StatelessWidget {
   final Location location;
