@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:project_3_keys/game_locations/santa-clara/in_game_locations.dart';
-import 'package:project_3_keys/game_locations/santa-clara/info_key_1.dart';
+import 'package:project_3_keys/features/games/santa-clara/in_game_locations.dart';
+import 'package:project_3_keys/features/games/santa-clara/info_key_1.dart';
 
 class Riddle1 extends StatefulWidget {
   // final InGameLocation inGameLocation;
@@ -56,7 +56,7 @@ Future<void> _checkDistanceToHotel() async {
       print(hotelLocation.latitude);
       print(hotelLocation.longitude);
 
-      if (distance <= 500) {
+      if (distance <= 10) {
         setState(() {
           canExplore = true;
         });

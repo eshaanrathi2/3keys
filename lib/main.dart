@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_3_keys/pages/auth_page.dart';
-import 'package:project_3_keys/pages/login_page.dart';
+import 'package:project_3_keys/features/authentication/auth_page.dart';
+import 'package:project_3_keys/features/authentication/login_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

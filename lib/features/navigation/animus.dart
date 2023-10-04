@@ -142,9 +142,6 @@ class _AnimusPageState extends State<AnimusPage> {
                   ],
                 ),
 
-                
-
-
               ],
             ),
           ),
