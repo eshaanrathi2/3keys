@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:project_3_keys/features/games/santa-clara/in_game_locations.dart';
 import 'package:project_3_keys/features/games/santa-clara/info_key_1.dart';
 import 'package:project_3_keys/features/games/santa-clara/riddles/riddle1.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SantaClaraGame extends StatelessWidget {
   const SantaClaraGame({super.key});
@@ -15,7 +16,7 @@ class SantaClaraGame extends StatelessWidget {
           color: Colors.grey, //change your color here
         ),
         title: const Text(
-          "Game: Santa Clara", 
+          "The journey begins", 
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -34,14 +35,12 @@ class SantaClaraGame extends StatelessWidget {
           
           // step into the unknown traveller
           Text(
-            "About the Location...\nYada Yada",
+            "This game is about the magical world of Santa Clara...",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
-
-
 
 
           ElevatedButton(
