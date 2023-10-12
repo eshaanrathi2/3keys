@@ -1,44 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_3_keys/features/authentication/register.dart';
+import 'package:project_3_keys/features/authentication/login_page.dart';
+import 'package:project_3_keys/features/home_page.dart';
 
-class CredentialsField extends StatelessWidget {
-  final dynamic controller;
-  final String hintText;
-  final bool obscureText;
- 
-  const CredentialsField({
-      super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText,
-    });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-                controller: controller,
-                obscureText: obscureText,
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  hintText: hintText,
-                ),
-                style: const TextStyle(
-                  fontSize: 18,
-                
-                ),
-              );
-  }
-}
-
-class SignInButton extends StatelessWidget {
+class SignUpButton extends StatelessWidget {
   final void Function()? onTap;
-  const SignInButton({super.key, required this.onTap});
+  const SignUpButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -62,114 +29,42 @@ class SignInButton extends StatelessWidget {
   }
 }
 
-class SquareGoogleButton extends StatelessWidget {
-  final String imagePath;
-  const SquareGoogleButton({super.key, required this.imagePath});
+class RegisterUser extends StatefulWidget {
+  const RegisterUser({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Image.asset(imagePath, height: 40,),
-    );
-  }
+  State<RegisterUser> createState() => _RegisterUserState();
 }
 
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class _RegisterUserState extends State<RegisterUser> {
   //credentials controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
-  //sign user in method
-  void signUserIn() async {
+Future<void> signUserUp() async {
+  try {
+    // Get the email and password from the controllers
+    // final email = emailController.text;
+    // final password = passwordController.text;
 
-    // show loading circle
-    showDialog(
-      context:context,
-      builder: (context){
-        return const Center(child: CircularProgressIndicator());
-      },
+    // Create a new user account with the provided email and password
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
     );
 
-    try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-      // Pop the CircularProgressIndicator and display the error
-      Navigator.pop(context);
-    } 
-    on FirebaseAuthException catch (e) {
-      // Pop the CircularProgressIndicator and display the error
-      Navigator.pop(context);
-
-
-      // User not found
-      if (e.code == 'user-not-found') {
-        displayUserNotFound();
-        // print('User not found');
-      }
-
-      // Wrong password
-      else if (e.code == 'wrong-password') {
-        displayWrongPassword();
-        // print('Cipher incorrect!');
-      }
-
-      else{
-        displayIncorrectCredentials();
-        // print('Cipher incorrect!');
-      }
-    }
-
-  }
-  
-  void displayUserNotFound() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text('No traveller found with that email.\nEnter correct email or sign up :)'),
-        );
-      },
+    // If the user registration is successful, you can navigate to another page, e.g., the home page.
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()), // Replace with the appropriate destination.
     );
+  } catch (e) {
+    // Handle any registration errors here
+    print('Registration failed: $e');
+    // You can display an error message to the user or take other actions as needed.
   }
+}
 
-  void displayWrongPassword() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text('Cipher was not entered correctly. Try again :('),
-        );
-      },
-    );
-  }
-
-
-  void displayIncorrectCredentials() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text('Incorrect credentials. Try again :('),
-        );
-      },
-    );
-  }
-    
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
               // Align to center 
               // mainAxisAlignment: MainAxisAlignment.center,
               
-              children: [
+              children: <Widget>[
                 // vertical spacing of 50
                 const SizedBox(height: 20),
                 // logo
@@ -230,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
       
                 // vertical spacing of 50
                 const SizedBox(height: 10),
-      
+       
                 CredentialsField(
                   controller: emailController,
                   hintText: 'ferdinandmagellan@gmail.com',
@@ -279,7 +174,25 @@ class _LoginPageState extends State<LoginPage> {
                 // enter button
                 // vertical spacing of 20
                 const SizedBox(height: 20),
-                SignInButton(onTap: signUserIn),
+
+                // Sign up user / register
+                GestureDetector(
+                  onTap:signUserUp,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    margin: const EdgeInsets.symmetric(horizontal: 48),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Register",
+                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
       
       
                 // Google , Apple sign choice
@@ -320,14 +233,14 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
       
       
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SquareGoogleButton(imagePath: "lib/assets/auth_page/apple-logo.png"),
-                    SizedBox(width: 20,),
+                // const Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     SquareGoogleButton(imagePath: "lib/assets/auth_page/apple-logo.png"),
+                //     SizedBox(width: 20,),
       
-                    SquareGoogleButton(imagePath: "lib/assets/auth_page/google-logo.png"),
-                ],),
+                //     SquareGoogleButton(imagePath: "lib/assets/auth_page/google-logo.png"),
+                // ],),
       
       
       
@@ -335,18 +248,19 @@ class _LoginPageState extends State<LoginPage> {
                 // vertical spacing of 30
                 const SizedBox(height: 20),
       
+                // secret cipher
                 // register user
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterUser()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("First time?"),
+                      Text("Already a traveller?"),
                       SizedBox(width: 4),
                       Text(
-                        "Create your travelers log!",
+                        "Goto login page!",
                         style: TextStyle(
                           color: Color.fromARGB(255, 0, 102, 185),
                           fontWeight: FontWeight.bold,
@@ -356,7 +270,9 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 )
-
+      
+                
+      
             ],),
           ),
         ),
