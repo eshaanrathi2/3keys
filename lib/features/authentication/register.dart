@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_3_keys/data_models/database.dart';
 import 'package:project_3_keys/features/authentication/login_page.dart';
 import 'package:project_3_keys/features/home_page.dart';
 
@@ -52,7 +53,11 @@ Future<void> signUserUp() async {
       email: emailController.text,
       password: passwordController.text,
     );
+    
+    // After a successful registration, you can get the current user from Firebase Authentication.
+    User? user = FirebaseAuth.instance.currentUser;
 
+    await DatabaseService(uid: user!.uid).initializeUserData();
     // If the user registration is successful, you can navigate to another page, e.g., the home page.
     Navigator.pushReplacement(
       context,
