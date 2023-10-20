@@ -77,6 +77,17 @@ class _AnimusPageState extends State<AnimusPage> {
     });
   }
 
+  Widget _buildProfilePicArea() {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.all(16),
+      child: CircleAvatar(
+        radius: 50, // Adjust the size as needed
+        backgroundImage: AssetImage("assets/profile_image.jpg"), // Use your image asset
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
