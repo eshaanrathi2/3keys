@@ -10,10 +10,10 @@ class DatabaseService {
   
   // Dummy user data for testing:
   final user_datamodel = {
-    "santa-clara": {
-      "riddles-solved": {
-        "1":0,
-        "2":0
+    "geo":{
+      "locations":{
+        "santa-clara":{"riddles-solved":0},
+        "paris":{"riddles-solved":0},
       }
     },
   };
