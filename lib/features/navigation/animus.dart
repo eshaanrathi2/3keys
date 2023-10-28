@@ -12,6 +12,7 @@ class AnimusPage extends StatefulWidget {
 }
 
 class _AnimusPageState extends State<AnimusPage> {
+
   File? _profileImage;
   // File? _backgroundImage;
   String? _profileImageUrl; // Add a field to store the profile image URL
@@ -66,35 +67,56 @@ class _AnimusPageState extends State<AnimusPage> {
   @override
   void initState() {
     super.initState();
+    
     // Retrieve the profile image URL from Firestore when the widget initializes
     // Replace 'users' and 'profileImageUrl' with the actual collection and field names
     _firestore.collection('users').doc(user.uid).get().then((document) {
       if (document.exists) {
-        setState(() {
-          _profileImageUrl = document.data()?['profileImageUrl'] as String;
-        });
+        var profileImageUrl = document.data()?['profileImageUrl'];
+        if (profileImageUrl is String) {
+          setState(() {
+            _profileImageUrl = profileImageUrl;
+          });
+        } else {
+          // Handle the case where 'profileImageUrl' is not a String
+        }
+      } else {
+        // Handle the case where the document does not exist
       }
     });
   }
 
-  Widget _buildProfilePicArea() {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.all(16),
-      child: CircleAvatar(
-        radius: 50, // Adjust the size as needed
-        backgroundImage: AssetImage("assets/profile_image.jpg"), // Use your image asset
-      ),
-    );
+
+  Future<int> getTotalRiddlesSolved() async {
+    int totalRiddlesSolved = 0;
+    final collectionReference = FirebaseFirestore.instance.collection('users');
+    final document = await collectionReference.doc(user.uid).get();
+    if (document.exists) {
+      final geoData = document.data()?['geo'];
+
+      if (geoData != null) {
+        final locations = geoData['locations'];
+
+        if (locations != null) {
+          locations.forEach((location, data) {
+            if (data != null && data['riddles-solved'] is num) {
+              totalRiddlesSolved += (data['riddles-solved'] as num).toInt();
+            }
+          });
+        }
+      }
+    }
+    return totalRiddlesSolved;
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
             color: Colors.grey,
           ),
           actions: [
@@ -108,126 +130,125 @@ class _AnimusPageState extends State<AnimusPage> {
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Colors.white,
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 20.0),
-                // Profile Image
-                _profileImage != null
-                    ? Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            radius: 60.0,
-                            backgroundImage: _profileImageUrl != null
-                                ? NetworkImage(_profileImageUrl!)
-                                : FileImage(_profileImage!) as ImageProvider,
-                          ),
-
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () => _removeImage(true),
-                          ),
-                        ],
-                      )
-                    : CircleAvatar(
-                        radius: 60.0,
-                        child: IconButton(
-                          icon: Icon(Icons.add_a_photo),
-                          onPressed: () => _pickImage(ImageSource.gallery),
-                        ),
-                      ),
-                SizedBox(height: 20.0),
-                
-                // Other user information widgets can go here
-                
-                const TabBar(
-                  tabs: [
-                    Tab(
-                      // text: 'Chronicles',
-                      // Change the text color of this tab to black
-                      // You can customize other styles here as well
-                      iconMargin: EdgeInsets.all(0),
-                      child: Text(
-                        'Chronicles',
-                        style: TextStyle(color: Colors.black,fontSize: 18),
-                      ),
-                    ),
-
-                    Tab(
-                      // text: 'Tab 2',
-                      // Change the text color of this tab to black
-                      // You can customize other styles here as well
-                      iconMargin: EdgeInsets.all(0),
-                      child: Text(
-                        'Ledger',
-                        style: TextStyle(color: Colors.black,fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-
-              ],
-            ),
-          ),
-        ),
+      ),
+      body: Column(
+        children: [
+          _buildProfilePicArea(),
+          SizedBox(height: 10), // Some spacing between the profile pic area and text
+          _buildProfileText(),
+          Expanded(child: _buildTabBar()),
+        ],
       ),
     );
   }
+
+
+  Widget _buildProfilePicArea() {
+  return SingleChildScrollView(
+    child: Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: 20.0),
+          // Profile Image
+          _profileImage != null
+              ? Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 60.0,
+                      backgroundImage: _profileImageUrl != null
+                          ? NetworkImage(_profileImageUrl!)
+                          : FileImage(_profileImage!) as ImageProvider,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => _removeImage(true),
+                    ),
+                  ],
+                )
+              : CircleAvatar(
+                  radius: 60.0,
+                  child: IconButton(
+                    icon: Icon(Icons.add_a_photo),
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                  ),
+                ),
+        ],
+      ),
+    ),
+  );
 }
 
 
+  Widget _buildProfileText() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Text(
+        "Your profile description goes here. You can add 1-2 lines of text.",
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
+  Widget _buildTabBar() {
+    return DefaultTabController(
+      length: 2, // Number of tabs
+      child: Column(
+        children: [
+          TabBar(
+            tabs: [
+              Tab(text: "Chronicles"),
+              Tab(text: "Ledger"),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildChroniclesPage(),
+                _buildLedgerPage(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildChroniclesPage() {
+    return Center(
+      child: Text("Chronicles Page Content"),
+    );
+  }
 
+  Widget _buildLedgerPage() {
+  return FutureBuilder<int>(
+    future: getTotalRiddlesSolved(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator(); // Display a loading indicator while waiting for the result.
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        final totalRiddlesSolved = snapshot.data;
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Total Riddles Solved:',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                '$totalRiddlesSolved',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        );
+      }
+    },
+  );
+  }
 
-
-
-
-
-
-// Old HomePage. Just has logout button.
-
-// class AnimusPage extends StatefulWidget {
-//   AnimusPage({super.key});
-//   @override
-//   State<AnimusPage> createState() => _AnimusPageState();
-// }
-
-// class _AnimusPageState extends State<AnimusPage> {
-
-//   final user = FirebaseAuth.instance.currentUser!;
-
-//   void signUserOut() {
-//     FirebaseAuth.instance.signOut();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         iconTheme: const IconThemeData(
-//           color: Colors.grey, //change your color here
-//         ),
-//         actions: [
-//           IconButton(
-//             onPressed: signUserOut,
-//             icon: const Icon(Icons.logout))
-//         ],
-//         title: const Text(
-//           "Animus", 
-//           style: TextStyle(
-//             color: Colors.black
-//           )
-//         ),
-//         backgroundColor: Colors.white,
-//       ),
-//       body: Center(
-//         child: Text("Logged in as ${user.email!}"),
-//       ),
-//     );
-//   }
-// }
+}
