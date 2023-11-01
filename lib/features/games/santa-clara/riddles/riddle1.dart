@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project_3_keys/features/games/santa-clara/in_game_locations.dart';
@@ -18,6 +20,7 @@ class _Riddle1State extends State<Riddle1> {
 
 
   bool canExplore = false;
+  final user = FirebaseAuth.instance.currentUser!; // Current user.
   
 
   @override
@@ -70,8 +73,48 @@ Future<void> _checkDistanceToHotel() async {
     }
   }
 
+  Future<int> getRiddlesSolved() async {
+    int riddlesSolved = 0;
+    final collectionReference = FirebaseFirestore.instance.collection('users');
+    final document = await collectionReference.doc(user.uid).get();
+    if (document.exists) {
+      final geoData = document.data()?['geo'];
+
+      if (geoData != null) {
+        final locationData = geoData['locations']['santa-clara'];
+        if (locationData != null && locationData['riddles-solved'] is num) {
+          riddlesSolved = (locationData['riddles-solved'] as num).toInt();
+        }
+      }
+    }
+    return riddlesSolved;
+  }
 
 
+Future<String?> getCurrentRiddle() async {
+  int currentRiddleId = await getRiddlesSolved() + 1;
+  String? currentRiddleText;
+
+  final collectionReference = FirebaseFirestore.instance.collection('locations');
+  final document = await collectionReference.doc('yLnayOC8AY9ylBgAETkL').get();
+
+  if (document.exists) {
+    final data = document.data();
+    if (data != null) {
+      final santaClaraData = data['santa-clara'];
+      if (santaClaraData != null) {
+        final riddles = santaClaraData['riddles'];
+        // print(riddles);
+        if (riddles != null) {
+          // Subtract 1 to get the correct index (assuming the riddles are 0-indexed)
+          currentRiddleText = riddles['$currentRiddleId']['riddle'];
+        }
+      }
+    }
+  }
+
+  return currentRiddleText;
+}
 
 
 
@@ -104,6 +147,41 @@ Future<void> _checkDistanceToHotel() async {
             const Text("If the user’s current location is within 500 meters of the coordinates of the location then allow user to click on the check button.\n",style: TextStyle(fontSize: 20),),
             const Text("Else prompt the user that “you are away, try again” when he clicks on the explore  button.",style: TextStyle(fontSize: 20),),
           
+
+
+
+
+
+
+          // // Display the number of riddles solved
+          // FutureBuilder<int>(
+          //   future: getRiddlesSolved(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return Text("Loading number of riddles solved...");
+          //     } else if (snapshot.hasError) {
+          //       return Text("Error: ${snapshot.error}");
+          //     } else {
+          //       return Text("Number of riddles solved: ${snapshot.data}");
+          //     }
+          //   },
+          // ),
+          
+          // Display the current riddle
+          FutureBuilder<String?>(
+            future: getCurrentRiddle(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading current riddle...");
+              } else if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              } else {
+                return Text("Current Riddle: ${snapshot.data}");
+              }
+            },
+          ),
+
+
           
           // Explore button
           ElevatedButton(
