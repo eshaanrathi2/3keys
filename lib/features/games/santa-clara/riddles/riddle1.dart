@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:project_3_keys/features/games/santa-clara/in_game_locations.dart';
 import 'package:project_3_keys/features/games/santa-clara/info_key_1.dart';
+import 'package:latlong2/latlong.dart';
 
 class Riddle1 extends StatefulWidget {
   // final InGameLocation inGameLocation;
@@ -30,23 +31,36 @@ class _Riddle1State extends State<Riddle1> {
   }
 
 
-Future<void> _checkDistanceToHotel() async {
-    try {
-      LocationPermission permission;
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.deniedForever) {
-          return Future.error('Location Not Available');
-        }
-      } else {
-        throw Exception('Error');
-      }
 
+Future<void> _checkDistanceToHotel() async {
+  try {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      
-      final userLocation = await Geolocator.getCurrentPosition();
-      final hotelLocation = inGameLocations[0];
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error('Location Not Available');
+      }
+    } else {
+      throw Exception('Error');
+    }
+
+    permission = await Geolocator.requestPermission();
+
+    final userLocation = await Geolocator.getCurrentPosition();
+    final firestore = FirebaseFirestore.instance; // Initialize Firebase Firestore
+    final documentSnapshot = await firestore
+        .collection('locations')
+        .doc('yLnayOC8AY9ylBgAETkL')
+        .collection('santa-clara')
+        .doc('riddles')
+        .collection('1')
+        .doc('coordinates')
+        .get();
+
+    if (documentSnapshot.exists) {
+      final geoPoint = documentSnapshot.get('coordinates') as GeoPoint;
+      final hotelLocation = LatLng(geoPoint.latitude, geoPoint.longitude);
 
       final distance = Geolocator.distanceBetween(
         userLocation.latitude,
@@ -68,10 +82,13 @@ Future<void> _checkDistanceToHotel() async {
           canExplore = false;
         });
       }
-    } catch (e) {
-      print("Error checking distance: $e");
+    } else {
+      print("Hotel location not found in Firestore.");
     }
+  } catch (e) {
+    print("Error checking distance: $e");
   }
+}
 
   Future<int> getRiddlesSolved() async {
     int riddlesSolved = 0;
@@ -126,7 +143,7 @@ Future<String?> getCurrentRiddle() async {
           color: Colors.grey, //change your color here
         ),
         title: const Text(
-          "1st Key is hidden at...",
+          "Key is hidden at...",
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -142,10 +159,10 @@ Future<String?> getCurrentRiddle() async {
           crossAxisAlignment: CrossAxisAlignment.center,
       
           children: [
-            const Text("Riddle 1... yada yada\n\n",style: TextStyle(fontSize: 20),),
-            const Text("User should goto the coordinates specified by this riddle.\n",style: TextStyle(fontSize: 20),),
-            const Text("If the user’s current location is within 500 meters of the coordinates of the location then allow user to click on the check button.\n",style: TextStyle(fontSize: 20),),
-            const Text("Else prompt the user that “you are away, try again” when he clicks on the explore  button.",style: TextStyle(fontSize: 20),),
+            // const Text("Riddle 1... yada yada\n\n",style: TextStyle(fontSize: 20),),
+            // const Text("User should goto the coordinates specified by this riddle.\n",style: TextStyle(fontSize: 20),),
+            // const Text("If the user’s current location is within 500 meters of the coordinates of the location then allow user to click on the check button.\n",style: TextStyle(fontSize: 20),),
+            // const Text("Else prompt the user that “you are away, try again” when he clicks on the explore  button.",style: TextStyle(fontSize: 20),),
           
 
 
@@ -176,7 +193,7 @@ Future<String?> getCurrentRiddle() async {
               } else if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
               } else {
-                return Text("Current Riddle: ${snapshot.data}");
+                return Text("${snapshot.data}",style: TextStyle(fontSize: 20),);
               }
             },
           ),
