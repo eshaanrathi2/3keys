@@ -27,7 +27,7 @@ class SantaClaraGame extends StatelessWidget {
 
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // vertical spacing of 50
           SizedBox(height: 20),
@@ -35,13 +35,18 @@ class SantaClaraGame extends StatelessWidget {
           
           // step into the unknown traveller
           Text(
-            "This game is about the magical world of Santa Clara...",
+            "This game is about the magical world of Santa Clara...\n\nA vibrant city, where the future meets the past in perfect harmony.",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
 
+
+
+          // vertical spacing of 50
+          SizedBox(height: 20),
+          // logo
 
           ElevatedButton(
             onPressed: () {
@@ -60,7 +65,7 @@ class SantaClaraGame extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.bold)),
 
-            child: Text("Goto 1st riddle",style: TextStyle(color: Colors.white),),
+            child: Text("Go to the riddles",style: TextStyle(color: Colors.white),),
           ),
         ],       
       ),
